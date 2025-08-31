@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>AgriTesk Sistemi - Tarım İzleme Platformu</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font:14px/1.4 "Inter",Arial,Helvetica,sans-serif;color:#444;background:#f4f6fa;overflow:hidden}
+:root{
+  --blue:#4A6FFF;--blue-light:#5A7FFF;--green:#28A745;--yellow:#FFC107;--red:#DC3545;
+  --card-bg:#FAFAFA;--muted:#777;--border:#E5E5E5;--radius:6px;
+}
+header{padding:8px 16px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center}
+header h1{font-size:20px;font-weight:700}
+header span{margin-left:auto;font-size:13px;color:var(--muted)}
+main{height:100%;display:flex;flex-direction:column;gap:10px;padding:10px;min-height:0}
+.topSplit{flex:1 0 auto;display:flex;gap:10px;min-height:0}
+#leftCol{flex:1;display:flex;flex-direction:column;gap:10px;min-width:300px}
+.metric-grid{display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:160px;gap:10px;min-height:0}
+.metric{position:relative;border:2px solid var(--blue);border-radius:8px;background:#fff}
+.metric header{position:absolute;inset:0 0 auto 0;height:35px;background:var(--blue);color:#fff;font-weight:600;
+               display:flex;justify-content:center;align-items:center;border-top-left-radius:6px;border-top-right-radius:6px}
+.metric .val{position:absolute;inset:35px 0 0 0;display:flex;justify-content:center;align-items:center;
+            font-size:36px;font-weight:700;color:var(--blue)}
+.metric[data-type="ALT"]{--blue:#2E8B57}.metric[data-type="BAT"]{--blue:#CD853F}
+#oriCanvas{width:100%;height:100%;background:#f0f8ff;border-radius:8px;border:2px solid #4682B4}
+#rightCol{flex:3;display:flex;flex-direction:column;gap:10px;min-height:0;overflow:hidden}
+.top-panels{flex:1 0 38%;display:flex;gap:10px;min-height:0}
+.panel{flex:1;background:var(--card-bg);border-radius:var(--radius);
+       display:flex;flex-direction:column;padding:12px;overflow:hidden}
+.panel h2{font-size:15px;font-weight:700;color:#26348B;margin-bottom:6px}
+.sep{height:1px;background:var(--border);margin:6px 0}
+.mid-panels{flex:0 0 18%;display:flex;gap:10px}
+.mid-panels .sub{flex:1;background:#fff;border-radius:8px;padding:10px;display:flex;flex-direction:column;font-size:12px;overflow:hidden}
+.mid-panels .sub h3{font-size:14px;font-weight:700;text-align:center;margin-bottom:4px}
+.progress{width:100%;height:14px;border:1px solid #888;border-radius:6px;overflow:hidden}
+.progress span{display:block;height:100%;background:#4CAF50;text-align:center;font-size:11px;color:#fff}
+.bottom{flex:0 0 44%;display:flex;gap:10px;min-height:0;max-height:44vh}
+#graphs{flex:2;display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:1fr;gap:8px;min-height:0;max-height:100%}
+.chart-box{background:#fff;border:1px solid #555;border-radius:8px;padding:4px;display:flex;flex-direction:column;min-height:0;max-height:100%}
+.chart-box canvas{flex:1 !important;min-height:0;max-height:100%}
+#logs{flex:1;display:flex;flex-direction:column;background:#f5f5f5;border:1px solid #888;border-radius:8px;min-height:0;max-height:100%}
+#logs header{font-size:16px;font-weight:700;text-align:center;background:#d0d0d0;padding:4px;
+             border-top-left-radius:8px;border-top-right-radius:8px;flex-shrink:0}
+#logArea{flex:1;overflow-y:auto;background:#fff;font-family:Courier,monospace;font-size:11px;padding:6px;max-height:calc(100% - 60px)}
+#logs .controls{padding:4px;display:flex;align-items:center;gap:6px;font-size:12px;flex-shrink:0;border-top:1px solid #ddd}
+.panel label{font-size:11px;color:var(--muted)}
+.value{font-weight:600}
+#mission .phase{font-weight:700;background:#E8E8E8;padding:6px;border-radius:4px;text-align:center;margin-bottom:6px}
+.time-row{display:flex;gap:20px;font-size:12px;margin-bottom:6px}
+.telemetry-grid{display:grid;grid-template-columns:auto auto;row-gap:6px}
+.telemetry-grid div{display:flex;justify-content:space-between;align-items:center;font-size:12px}
+#mission .event{font-size:12px;margin-top:auto}
+.status-item{display:flex;align-items:center;justify-content:space-between;font-size:12px;margin-bottom:6px}
+.status-dot{font-size:16px;margin-right:8px}
+#command .cmd-row{display:flex;align-items:center;margin-bottom:8px;font-size:12px}
+#command select,#command input{flex:1;padding:2px 5px;border:1px solid #DDD;border-radius:3px;font-size:12px}
+#command button{margin-left:6px;background:var(--blue);border:none;color:#fff;padding:4px 10px;
+                border-radius:3px;font-size:12px;cursor:pointer}
+#command button:hover{background:var(--blue-light)}
+#command #abort{background:#FF3B30;font-weight:700}
+#command #abort:hover{background:#FF4B40}
+#command ul{flex:1;overflow:auto;font-size:11px;border:1px solid #DDD;border-radius:3px;padding:4px;margin-top:6px;background:#fff}
+#logArea::-webkit-scrollbar,#command ul::-webkit-scrollbar{width:6px}
+#logArea::-webkit-scrollbar-thumb,#command ul::-webkit-scrollbar-thumb{background:#bbb;border-radius:6px}
+</style>
+</head>
+<body>
+<div id="app">
+  <header><h1>AgriTesk Sistemi</h1><span id="clock"></span></header>
+  <main>
+    <div class="topSplit">
+      <section id="leftCol">
+        <div class="metric-grid">
+          <div class="metric" data-type="WEATHER_TEMP"><header>HAVA SICAKLIĞI</header><span class="val" id="weatherTemp">--</span></div>
+          <div class="metric" data-type="WATER_TEMP"><header>SU SICAKLIĞI</header><span class="val" id="waterTemp">--</span></div>
+          <div class="metric" data-type="WEATHER_HUM"><header>HAVA NEM</header><span class="val" id="weatherHum">--</span></div>
+          <div class="metric" data-type="SOIL_MOIST"><header>TOPRAK NEM</header><span class="val" id="soilMoist">--</span></div>
+        </div>
+      </section>
+      <section id="rightCol">
+        <div class="top-panels">
+          <div class="panel" id="mission">
+            <h2>🚀 GÖREV DURUMU</h2><div class="sep"></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:12px;">
+              <div id="waterTank" style="width:60px;height:120px;position:relative;background:#e0e7ef;border-radius:16px;border:2px solid #4A6FFF;overflow:hidden;box-shadow:0 2px 8px #0001;">
+                <div id="waterFill" style="position:absolute;bottom:0;left:0;width:100%;height:50%;background:linear-gradient(to top,#4A90E2 80%,#b3d8fd);transition:height 0.5s;"></div>
+                <span id="waterIcon" style="position:absolute;top:8px;left:50%;transform:translateX(-50%);font-size:28px;color:#4A90E2;">💧</span>
+              </div>
+              <div style="font-size:18px;font-weight:600;letter-spacing:1px;">
+                Su Seviyesi: <span id="waterLevelText">--</span>
+              </div>
+            </div>
+          </div>
+          <div class="panel" id="system">
+            <h2>📋 ÖNERİLER & BİLDİRİMLER</h2><div class="sep"></div>
+            <div id="recommendations" style="font-size:12px;line-height:1.4;max-height:200px;overflow-y:auto;">
+              <div class="rec-item">• Sistem normal çalışıyor</div>
+            </div>
+          </div>
+          <div class="panel" id="command" style="flex:1.2">
+            <h2>🎮 KOMUT MERKEZİ</h2><div class="sep"></div>
+            <div class="cmd-row"><label>SU POMPASI&nbsp;</label>
+              <select id="paraSel"><option>KAPALI</option><option>AYIR</option><option>BAĞLA</option></select>
+            </div>
+            <div class="cmd-row"><label>MOTOR&nbsp;</label>
+              <select id="buzSel"><option>KAPALI</option><option>KISA</option><option>UZUN</option><option>SOS</option></select>
+            </div>
+            <button id="abort" onclick="sendCmd()">KOMUT GÖNDER</button>
+            <ul id="cmdHist"></ul>
+          </div>
+        </div>
+        <div class="mid-panels">
+          <div class="sub" id="conn">
+            <h3>BAĞLANTI DURUMU</h3>
+            <div style="margin:4px 0">LoRa Sinyali:</div>
+            <div class="progress"><span id="sigBar" style="width:80%">80%</span></div>
+            <div style="margin-top:6px">Paketler: <span id="pktCount">0</span>  Kayıp: <span id="lostCount">0</span></div>
+          </div>
+          <div class="sub">
+            <h3>VERİ KAYDI</h3>
+            <div style="margin-bottom:6px">Dosya: <code>data_log.csv</code></div>
+            <button style="align-self:flex-start" onclick="recToggle()" id="recBtn">Kaydı Başlat</button>
+          </div>
+        </div>
+      </section>
+    </div>
+    <div class="bottom">
+      <div id="graphs">
+        <div class="chart-box"><canvas id="weatherTempChart"></canvas></div>
+        <div class="chart-box"><canvas id="waterTempChart"></canvas></div>
+        <div class="chart-box"><canvas id="tempRatioChart"></canvas></div>
+        <div class="chart-box"><canvas id="weatherHumChart"></canvas></div>
+        <div class="chart-box"><canvas id="soilMoistChart"></canvas></div>
+        <div class="chart-box"><canvas id="humRatioChart"></canvas></div>
+      </div>
+      <div id="logs">
+        <header>SİSTEM KAYITLARI</header>
+        <div id="logArea"></div>
+        <div class="controls"><label><input type="checkbox" id="autosc" checked>Otomatik kaydır</label>
+          <button onclick="clearLogs()">Temizle</button></div>
+      </div>
+    </div>
+  </main>
+</div>
+<script>
+
+let roll = 0, pitch = 0, yaw = 0;
+const alpha = 0.98;
+let lastT = performance.now();
+
+function updateIMU(accX,accY,accZ, gyrX,gyrY,gyrZ) {
+  const now = performance.now(), dt = (now - lastT)/1000; // s
+  lastT = now;
+  const rollAcc  =  Math.atan2(accY, accZ);
+  const pitchAcc = -Math.atan2(accX, Math.hypot(accY, accZ));
+  roll  += gyrX * dt;
+  pitch += gyrY * dt;
+  yaw   += gyrZ * dt;
+  roll  = alpha * roll  + (1-alpha) * rollAcc;
+  pitch = alpha * pitch + (1-alpha) * pitchAcc;
+  return {
+    rollDeg  : roll  * 180/Math.PI,
+    pitchDeg : pitch * 180/Math.PI,
+    yawDeg   : yaw   * 180/Math.PI
+  };
+}
+
+let file_text = ''
+
+// Static data object - no WebSocket needed
+let data = {
+  "weatherTemp": 25.3,
+  "waterTemp": 18.7,
+  "weatherHum": 62.1,
+  "soilMoist": 45.8,
+  "waterLevel": 1,
+  "strength": 85,
+  "total": 150,
+  "lost": 3,
+  "acc": [0.1, 0.2, 9.8],
+  "gyro": [0.01, -0.02, 0.005]
+}
+
+// Update data with logical formulas
+function updateData() {
+  const time = Date.now() / 1000; // seconds since epoch
+  
+  // Temperature variations (day/night cycle simulation)
+  data.weatherTemp = 25 + 10 * Math.sin(time * 0.01) + Math.random() * 2 - 1;
+  data.waterTemp = 18 + 6 * Math.sin(time * 0.008) + Math.random() * 1.5 - 0.75;
+  data.temperature = data.weatherTemp; // Same as weather temp
+  
+  // Humidity (inverse relationship with temperature)
+  data.weatherHum = 70 - (data.weatherTemp - 25) * 1.5 + Math.random() * 5 - 2.5;
+  data.soilMoist = 45 + 15 * Math.sin(time * 0.005) + Math.random() * 3 - 1.5;
+  data.humidity = data.weatherHum; // Same as weather humidity
+  
+  // Altitude and velocity (simulate flight)
+  data.altitude = 200 + 150 * Math.sin(time * 0.02) + Math.random() * 10 - 5;
+  data.velocity = Math.cos(time * 0.02) * 5 + Math.random() * 1 - 0.5;
+  
+  // Battery drain over time
+  data.battery_voltage = Math.max(3.3, 4.2 - (time * 0.0001));
+  
+  // Environmental
+  data.pressure = 1015 + 5 * Math.sin(time * 0.003) + Math.random() * 2 - 1;
+  data.light = 400 + 300 * Math.sin(time * 0.015) + Math.random() * 50 - 25;
+  
+  // Communication
+  data.strength = 80 + 15 * Math.sin(time * 0.007) + Math.random() * 5 - 2.5;
+  data.total += 1;
+  if (Math.random() < 0.02) data.lost += 1;
+  
+  // Water level (occasionally low)
+  data.waterLevel = Math.random() > 0.95 ? 0 : 1;
+  
+  // IMU data
+  data.acc = [
+    Math.random() * 2 - 1,
+    Math.random() * 2 - 1,
+    9.8 + Math.random() * 0.5 - 0.25
+  ];
+  data.gyro = [
+    Math.random() * 0.2 - 0.1,
+    Math.random() * 0.2 - 0.1,
+    Math.random() * 0.1 - 0.05
+  ];
+  
+  // Keep values in realistic ranges
+  data.weatherTemp = Math.max(10, Math.min(45, data.weatherTemp));
+  data.waterTemp = Math.max(5, Math.min(35, data.waterTemp));
+  data.weatherHum = Math.max(20, Math.min(95, data.weatherHum));
+  data.soilMoist = Math.max(15, Math.min(85, data.soilMoist));
+  data.strength = Math.max(0, Math.min(100, data.strength));
+}
+
+
+(function init () {
+  const $ = id => document.getElementById(id);
+  // Only define elements that actually exist in the HTML
+  const sigBar = $('sigBar'), pktCount = $('pktCount'), lostCount = $('lostCount');
+  const paraSel = $('paraSel'), buzSel = $('buzSel'), recBtn = $('recBtn');
+  const logArea = $('logArea'), autosc = $('autosc'), clock = $('clock');
+  const cmdHist = $('cmdHist');
+  const recommendations = $('recommendations');
+  
+  // Add the missing oriCanvas element - it doesn't exist in HTML, so create a placeholder
+  const oriCanvas = document.createElement('div');
+  
+  // Smart recommendations system
+  function updateRecommendations(weatherTemp, waterTemp, weatherHum, soilMoist, waterLevel) {
+    let recs = [];
+    
+    // System status first
+    recs.push("🟢 Sistem çalışıyor");
+    
+    // Temperature analysis
+    if (weatherTemp >= 20 && weatherTemp <= 30) {
+      recs.push("🌡️ Hava sıcaklığı normal (" + weatherTemp.toFixed(1) + "°C)");
+    } else if (weatherTemp > 35) {
+      recs.push("🔥 Hava sıcaklığı yüksek! Sulama sıklığını artırın");
+    } else if (weatherTemp < 10) {
+      recs.push("❄️ Hava sıcaklığı düşük! Bitkileri soğuktan koruyun");
+    } else {
+      recs.push("🌡️ Hava sıcaklığı: " + weatherTemp.toFixed(1) + "°C");
+    }
+    
+    // Water temperature analysis
+    if (waterTemp >= 15 && waterTemp <= 25) {
+      recs.push("💧 Su sıcaklığı normal (" + waterTemp.toFixed(1) + "°C)");
+    } else if (waterTemp > 30) {
+      recs.push("🔥 Su sıcaklığı yüksek! Soğutma gerekli");
+    } else if (waterTemp < 10) {
+      recs.push("🧊 Su sıcaklığı düşük! Isıtma gerekli");
+    } else {
+      recs.push("💧 Su sıcaklığı: " + waterTemp.toFixed(1) + "°C");
+    }
+    
+    // Soil moisture analysis - More detailed recommendations
+    if (soilMoist < 30) {
+      recs.push("🌱 Toprak nemi düşük (" + soilMoist.toFixed(1) + "%)");
+      recs.push("💦 Toprak neminin artırılması lazım");
+      recs.push("🚿 Sulama başlatılmalı");
+    } else if (soilMoist >= 30 && soilMoist < 40) {
+      recs.push("🌿 Toprak nemi orta seviyede (" + soilMoist.toFixed(1) + "%)");
+      recs.push("💧 Sulama düşünülebilir");
+    } else if (soilMoist >= 40 && soilMoist <= 70) {
+      recs.push("✅ Toprak nemi optimal (" + soilMoist.toFixed(1) + "%)");
+    } else {
+      recs.push("🚰 Toprak çok ıslak (" + soilMoist.toFixed(1) + "%)");
+      recs.push("⚠️ Drenaj kontrol edilmeli");
+      recs.push("🛑 Sulama durdurulmalı");
+    }
+    
+    // Air humidity analysis
+    if (weatherHum >= 50 && weatherHum <= 75) {
+      recs.push("🌬️ Hava nemi ideal (" + weatherHum.toFixed(1) + "%)");
+    } else if (weatherHum < 30) {
+      recs.push("🏜️ Hava çok kuru! Nem artırıcı önlemler alın");
+    } else if (weatherHum > 85) {
+      recs.push("💨 Hava nemi yüksek! Fungal hastalık riski");
+    }
+    
+    // Water level warnings
+    if (waterLevel < 1) {
+      recs.push("⚠️ Su seviyesi düşük! Rezervuar doldurulmalı");
+    } else {
+      recs.push("💧 Su seviyesi yeterli");
+    }
+    
+    // Advanced irrigation recommendations
+    const needsWater = soilMoist < 35;
+    const hotWeather = weatherTemp > 30;
+    const lowHumidity = weatherHum < 40;
+    
+    if (needsWater && hotWeather) {
+      recs.push("🔥 Sıcak hava + kuru toprak: Acil sulama gerekli!");
+    } else if (needsWater && lowHumidity) {
+      recs.push("🌵 Kuru hava + kuru toprak: Sulama öncelikli");
+    }
+    
+    // Time-based recommendations
+    const hour = new Date().getHours();
+    if (needsWater && (hour >= 6 && hour <= 9)) {
+      recs.push("🌅 Sabah saatleri: Sulama için ideal zaman");
+    } else if (needsWater && (hour >= 18 && hour <= 20)) {
+      recs.push("🌇 Akşam saatleri: Sulama için uygun zaman");
+    } else if (needsWater && (hour >= 12 && hour <= 16)) {
+      recs.push("☀️ Öğle saatleri: Sulama kaçınılmalı");
+    }
+    
+    // Overall assessment
+    if (weatherTemp >= 20 && weatherTemp <= 30 && soilMoist >= 40 && soilMoist <= 70 && weatherHum >= 50 && weatherHum <= 75) {
+      recs.push("🎯 Mükemmel tarım koşulları!");
+    }
+    
+    // Update recommendations display
+    recommendations.innerHTML = recs.map(rec => `<div class="rec-item">${rec}</div>`).join('');
+  }
+  setInterval(() => { clock.textContent = new Date().toLocaleString(); }, 1_000);
+  // Chart.js setup
+  const CHART_TITLES = [
+    'Hava Sıcaklığı (°C)',
+    'Su Sıcaklığı (°C)',
+    'Hava/Su Sıcaklık Oranı',
+    'Hava Nem (%)',
+    'Toprak Nem (%)',
+    'Hava/Toprak Nem Oranı'
+  ];
+  const CHART_COLORS = [
+    '#f75d59', // Hava Sıcaklığı
+    '#4A90E2', // Su Sıcaklığı
+    '#9c27b0', // Sıcaklık Oranı
+    '#4caf50', // Hava Nem
+    '#ffb400', // Toprak Nem
+    '#26348B'  // Nem Oranı
+  ];
+  const CHART_CANVAS = [
+    'weatherTempChart',
+    'waterTempChart',
+    'tempRatioChart',
+    'weatherHumChart',
+    'soilMoistChart',
+    'humRatioChart'
+  ];
+  // Y-axis min/max for each chart
+  const CHART_YRANGE = [
+    {min:0,max:50},   // Hava Sıcaklığı
+    {min:0,max:50},   // Su Sıcaklığı
+    {min:0,max:3},    // Sıcaklık Oranı
+    {min:0,max:100},  // Hava Nem
+    {min:0,max:100},  // Toprak Nem
+    {min:0,max:3}     // Nem Oranı
+  ];
+  // Dummy data generator (smooth, realistic)
+  function smoothDummyArr(min, max, phase=0, freq=0.15, noise=1) {
+    return Array(60).fill(0).map((_,i)=> {
+      const base = (Math.sin((i+phase)*freq) + 1) / 2; // 0-1
+      const val = min + (max-min)*base + (Math.random()-0.5)*noise;
+      return Math.max(min, Math.min(max, val));
+    });
+  }
+  // Chart factory with y-axis range and initial dummy data
+  const mkChart = (ctx, col, title, yrange, initialData) => new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: Array(60).fill(''),
+      datasets: [{ borderColor: col, borderWidth: 2, pointRadius: 0, data: initialData }]
+    },
+    options: {
+      animation: false,
+      plugins: {
+        legend: { display: false },
+        title: { display: true, text: title, color: '#333', font: { size: 12, weight: '600' } }
+      },
+      scales: {
+        x: { display: false },
+        y: { display: true, min: yrange.min, max: yrange.max }
+      }
+    }
+  });
+  // Create charts with smooth dummy data
+  const charts = [
+    mkChart($(CHART_CANVAS[0]).getContext('2d'), CHART_COLORS[0], CHART_TITLES[0], CHART_YRANGE[0], smoothDummyArr(10, 40, 0, 0.12, 0.7)), // Hava Sıcaklığı
+    mkChart($(CHART_CANVAS[1]).getContext('2d'), CHART_COLORS[1], CHART_TITLES[1], CHART_YRANGE[1], smoothDummyArr(12, 32, 10, 0.11, 0.6)), // Su Sıcaklığı
+    mkChart($(CHART_CANVAS[2]).getContext('2d'), CHART_COLORS[2], CHART_TITLES[2], CHART_YRANGE[2], smoothDummyArr(0.7, 1.5, 20, 0.09, 0.08)), // Sıcaklık Oranı
+    mkChart($(CHART_CANVAS[3]).getContext('2d'), CHART_COLORS[3], CHART_TITLES[3], CHART_YRANGE[3], smoothDummyArr(40, 80, 30, 0.13, 2)), // Hava Nem
+    mkChart($(CHART_CANVAS[4]).getContext('2d'), CHART_COLORS[4], CHART_TITLES[4], CHART_YRANGE[4], smoothDummyArr(30, 70, 40, 0.14, 2)), // Toprak Nem
+    mkChart($(CHART_CANVAS[5]).getContext('2d'), CHART_COLORS[5], CHART_TITLES[5], CHART_YRANGE[5], smoothDummyArr(0.7, 1.3, 50, 0.08, 0.07)), // Nem Oranı
+  ];
+  const push   = (ch,v)=>{const d=ch.data.datasets[0].data;d.push(v);if(d.length>60)d.shift();ch.update('none');};
+  const log = (msg,lvl='INFO')=>{
+    const log_msg = `[${new Date().toLocaleTimeString()}] [${lvl}] ${msg}`
+    if (recording)
+      file_text += log_msg + '\n'
+    const clr={INFO:'#000',WARNING:'#FF6600',ERROR:'#DC3545',SUCCESS:'#28A745'}[lvl]||'#000';
+    logArea.insertAdjacentHTML('beforeend',
+      `<span style="color:${clr}">${log_msg}</span><br>`);
+    if(autosc.checked)logArea.scrollTop=logArea.scrollHeight;
+  };
+  window.clearLogs = () => { logArea.innerHTML=''; };
+  let pktid = 0
+  function sendCmd(type){
+    pktid++
+    cmd = `${pktid},1,${buzSel.selectedIndex},${paraSel.selectedIndex}`
+    buzSel.value = paraSel.value = 'OFF'
+    console.log(cmd)
+      socket.send(cmd)
+    const li=document.createElement('li');
+    li.textContent=`⏳ ${new Date().toLocaleTimeString()} - ${type}: ${val}`;
+    cmdHist.prepend(li); if(cmdHist.children.length>50)cmdHist.lastChild.remove();
+    log(`Command sent: ${type}:${val}`);
+    setTimeout(()=>ack(li),1_000+Math.random()*2_000);      // fake ACK
+  }
+  function ack(li){
+    const ok=Math.random()>0.1;
+    li.textContent=li.textContent.replace('⏳',ok?'✅':'❌');
+    li.style.color=ok?'var(--green)':'var(--red)';
+    log(ok?'Command acknowledged':'Command failed', ok?'SUCCESS':'ERROR');
+  }
+  window.abortAll = () => {
+    [...cmdHist.children].forEach(li=>{
+      li.textContent='🔄 '+li.textContent.slice(2);
+      li.style.color='#0275D8';
+    });
+    log('ABORT ALL COMMANDS requested','WARNING');
+  };
+  let recording=false;
+function saveTextFile(filename, text) {
+  const blob = new Blob([text], { type: 'text/plain' });        // or "text/csv", "application/json", …
+  const url  = URL.createObjectURL(blob);
+
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+
+  URL.revokeObjectURL(url);
+}
+  window.recToggle=()=>{
+    recording=!recording;
+    if (!recording) {
+      saveTextFile(`data_log${new Date().toLocaleTimeString()}.txt`, file_text)
+      file_text = ''
+    }
+    recBtn.textContent=recording?'Stop Recording':'Start Recording';
+    recBtn.style.background=recording?'#f44336':'';
+    log(recording?'Recording started':'Recording stopped','INFO');
+  };
+  const scene   = new THREE.Scene();
+  const camera  = new THREE.PerspectiveCamera(45, oriCanvas.clientWidth/oriCanvas.clientHeight, 0.1, 100);
+  camera.position.set(0,0,4);
+  const renderer= new THREE.WebGLRenderer({alpha:true,antialias:true});
+  renderer.setSize(oriCanvas.clientWidth, oriCanvas.clientHeight);
+  oriCanvas.appendChild(renderer.domElement);
+  const cube    = new THREE.Mesh(
+                    new THREE.BoxGeometry(1,1,1),
+                    new THREE.MeshNormalMaterial({wireframe:false}));
+  cube.rotation.order='ZYX';
+  scene.add(cube);
+  const onResize=()=>{
+    const w=oriCanvas.clientWidth, h=oriCanvas.clientHeight;
+    camera.aspect=w/h; camera.updateProjectionMatrix();
+    renderer.setSize(w,h);
+  };
+  window.addEventListener('resize', onResize);
+  const renderLoop=()=>{renderer.render(scene,camera);requestAnimationFrame(renderLoop);};
+  renderLoop();
+  let tick=0,maxAlt=0,maxVel=0,maxDes=0,startMission,startPhase,totalPkt=0,lostPkt=0;
+  const fmtTime=ms=>{const s=ms/1e3|0,h=s/3600|0,m=(s%3600)/60|0,sec=s%60;return[h,m,sec].map(v=>String(v).padStart(2,'0')).join(':');};
+  const rnd=(a,b)=>Math.random()*(b-a)+a;
+  
+  // Global consistent dummy data state
+  let dummyState = {
+    weatherTemp: 25,
+    waterTemp: 18,
+    weatherHum: 60,
+    soilMoist: 45,
+    waterLevel: 1,
+    time: 0
+  };
+  
+  // Update dummy data with smooth, realistic changes
+  function updateDummyData() {
+    dummyState.time += 0.1;
+    const t = dummyState.time;
+    
+    // Smooth variations using sine waves + small random noise
+    dummyState.weatherTemp = 25 + 8 * Math.sin(t * 0.05) + (Math.random() - 0.5) * 2;
+    dummyState.waterTemp = 18 + 6 * Math.sin(t * 0.04 + 1) + (Math.random() - 0.5) * 1.5;
+    dummyState.weatherHum = 60 + 20 * Math.sin(t * 0.03 + 2) + (Math.random() - 0.5) * 3;
+    dummyState.soilMoist = 45 + 15 * Math.sin(t * 0.035 + 3) + (Math.random() - 0.5) * 2;
+    dummyState.waterLevel = Math.random() > 0.9 ? 0 : 1; // Occasionally low
+    
+    // Keep values in realistic ranges
+    dummyState.weatherTemp = Math.max(15, Math.min(40, dummyState.weatherTemp));
+    dummyState.waterTemp = Math.max(10, Math.min(30, dummyState.waterTemp));
+    dummyState.weatherHum = Math.max(30, Math.min(90, dummyState.weatherHum));
+    dummyState.soilMoist = Math.max(20, Math.min(80, dummyState.soilMoist));
+  }
+  
+  last = Date.now()
+  f = true
+  function telemetry(){
+    updateData(); // Update our static data with logical formulas
+    console.log("Updated data:", data);
+    
+    // Get all sensor values first
+    const weatherTemp = data.weatherTemp;
+    const waterTemp = data.waterTemp;
+    const weatherHum = data.weatherHum;
+    const soilMoist = data.soilMoist;
+    
+    const fault=tick%10===0;
+    const alt = data.altitude;
+    const vel = data.velocity;
+    const bat = data.battery_voltage;
+    const temp = data.temperature;
+    const hum = data.humidity;
+    const pres = data.pressure;
+    const light = data.light;
+    const roll=rnd(-45,45), pitch=rnd(-45,45), yaw=rnd(-180,180);
+    landed = false
+    if (Math.abs(vel) <= 1) {
+      if (f && Date.now() - last >= 5) landed = true
+      else if (!f) f = true, last = Date.now();
+    } else landed = f = false, last = Date.now();
+    tick++;
+    // Update metric boxes first
+    document.getElementById('weatherTemp').textContent = weatherTemp.toFixed(1) + ' °C';
+    document.getElementById('waterTemp').textContent = waterTemp.toFixed(1) + ' °C';
+    document.getElementById('weatherHum').textContent = weatherHum.toFixed(1) + ' %';
+    document.getElementById('soilMoist').textContent = soilMoist.toFixed(1) + ' %';
+    
+    // These elements don't exist in the current HTML, skip them
+    if(!startMission) startMission=startPhase=Date.now();
+    // Skip system status updates - panel now only shows recommendations
+    
+    // Calculate actual ratios
+    const tempRatio = waterTemp !== 0 ? (weatherTemp / waterTemp) : 1;
+    const humRatio = soilMoist !== 0 ? (weatherHum / soilMoist) : 1;
+    
+    // Update charts with consistent data
+    push(charts[0], weatherTemp);
+    push(charts[1], waterTemp);
+    push(charts[2], tempRatio);
+    push(charts[3], weatherHum);
+    push(charts[4], soilMoist);
+    push(charts[5], humRatio);
+    
+    totalPkt++; pktCount.textContent=totalPkt;
+    if(Math.random()<0.02){lostPkt++; lostCount.textContent=lostPkt;}
+    console.log("Updated packets:", totalPkt, "lost:", lostPkt);
+    const sigP = data.strength;
+    sigBar.style.width=sigP.toFixed(0)+'%'; sigBar.textContent=sigP.toFixed(0)+'%';
+    const rot = updateIMU(
+      data.acc[0], data.acc[1], data.acc[2],
+      data.gyro[0], data.gyro[1], data.gyro[2]
+    )
+    cube.rotation.set(
+      THREE.MathUtils.degToRad(rot.pitchDeg),
+      THREE.MathUtils.degToRad(rot.yawDeg),
+      THREE.MathUtils.degToRad(rot.rollDeg)
+    );
+    if(tick%5===0)log(`TEMP:${weatherTemp.toFixed(1)}°C HUM:${weatherHum.toFixed(1)}% WATER:${waterTemp.toFixed(1)}°C SOIL:${soilMoist.toFixed(1)}%`);
+    
+    // Water level from static data
+    const waterLevel = data.waterLevel;
+    const waterFill = document.getElementById('waterFill');
+    const waterLevelText = document.getElementById('waterLevelText');
+    if (waterLevel >= 1) {
+      waterFill.style.height = '90%';
+      waterLevelText.textContent = 'Normal';
+      waterFill.style.background = 'linear-gradient(to top,#4A90E2 80%,#b3d8fd)';
+    } else {
+      waterFill.style.height = '25%';
+      waterLevelText.textContent = 'Düşük';
+      waterFill.style.background = 'linear-gradient(to top,#f75d59 80%,#ffd6d6)';
+    }
+    
+    // Update smart recommendations
+    updateRecommendations(weatherTemp, waterTemp, weatherHum, soilMoist, waterLevel);
+    
+    // Environmental metrics already updated at top of function
+  }
+  window.sendCmd = sendCmd;
+  log('AgriTesk Sistemi başlatıldı');
+  // Start with static data immediately
+  updateData();
+  telemetry(); // Run once immediately
+  setInterval(telemetry,1_000);
+})();
+</script>
+</body>
+</html>
