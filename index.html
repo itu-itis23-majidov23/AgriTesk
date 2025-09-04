@@ -28,23 +28,24 @@ main{height:100%;display:flex;flex-direction:column;gap:10px;padding:10px;min-he
 .metric[data-type="ALT"]{--blue:#2E8B57}.metric[data-type="BAT"]{--blue:#CD853F}
 #oriCanvas{width:100%;height:100%;background:#f0f8ff;border-radius:8px;border:2px solid #4682B4}
 #rightCol{flex:3;display:flex;flex-direction:column;gap:10px;min-height:0;overflow:hidden}
-.top-panels{flex:1 0 38%;display:flex;gap:10px;min-height:0}
-.panel{flex:1;background:var(--card-bg);border-radius:var(--radius);
-       display:flex;flex-direction:column;padding:12px;overflow:hidden}
+.top-panels{height:24vh;display:flex;gap:8px;flex-shrink:0}
+.panel{flex:1;background:linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);border-radius:8px;
+       display:flex;flex-direction:column;padding:10px;overflow:hidden;
+       box-shadow:0 1px 3px rgba(0,0,0,0.08);border:1px solid rgba(226,232,240,0.8)}
 .panel h2{font-size:15px;font-weight:700;color:#26348B;margin-bottom:6px}
 .sep{height:1px;background:var(--border);margin:6px 0}
-.mid-panels{flex:0 0 18%;display:flex;gap:10px}
-.mid-panels .sub{flex:1;background:#fff;border-radius:8px;padding:10px;display:flex;flex-direction:column;font-size:12px;overflow:hidden}
+.mid-panels{height:12vh;display:flex;gap:8px;flex-shrink:0}
+.mid-panels .sub{flex:1;background:linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);border-radius:8px;padding:8px;display:flex;flex-direction:column;font-size:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.06);border:1px solid rgba(226,232,240,0.6)}
 .mid-panels .sub h3{font-size:14px;font-weight:700;text-align:center;margin-bottom:4px}
 .progress{width:100%;height:14px;border:1px solid #888;border-radius:6px;overflow:hidden}
 .progress span{display:block;height:100%;background:#4CAF50;text-align:center;font-size:11px;color:#fff}
-.bottom{flex:0 0 44%;display:flex;gap:10px;min-height:0;max-height:44vh}
+.bottom{height:56vh;display:flex;gap:8px;flex-shrink:0}
 #graphs{flex:2;display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:1fr;gap:8px;min-height:0;max-height:100%}
-.chart-box{background:#fff;border:1px solid #555;border-radius:8px;padding:4px;display:flex;flex-direction:column;min-height:0;max-height:100%}
+.chart-box{background:linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);border:1px solid rgba(148,163,184,0.3);border-radius:8px;padding:4px;display:flex;flex-direction:column;min-height:0;max-height:100%;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
 .chart-box canvas{flex:1 !important;min-height:0;max-height:100%}
-#logs{flex:1;display:flex;flex-direction:column;background:#f5f5f5;border:1px solid #888;border-radius:8px;min-height:0;max-height:100%}
-#logs header{font-size:16px;font-weight:700;text-align:center;background:#d0d0d0;padding:4px;
-             border-top-left-radius:8px;border-top-right-radius:8px;flex-shrink:0}
+#logs{flex:1;display:flex;flex-direction:column;background:linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);border:1px solid rgba(148,163,184,0.3);border-radius:8px;min-height:0;max-height:100%;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
+#logs header{font-size:14px;font-weight:700;text-align:center;background:linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);padding:6px;
+             border-top-left-radius:8px;border-top-right-radius:8px;flex-shrink:0;color:#475569}
 #logArea{flex:1;overflow-y:auto;background:#fff;font-family:Courier,monospace;font-size:11px;padding:6px;max-height:calc(100% - 60px)}
 #logs .controls{padding:4px;display:flex;align-items:center;gap:6px;font-size:12px;flex-shrink:0;border-top:1px solid #ddd}
 .panel label{font-size:11px;color:var(--muted)}
@@ -63,9 +64,79 @@ main{height:100%;display:flex;flex-direction:column;gap:10px;padding:10px;min-he
 #command button:hover{background:var(--blue-light)}
 #command #abort{background:#FF3B30;font-weight:700}
 #command #abort:hover{background:#FF4B40}
-#command ul{flex:1;overflow:auto;font-size:11px;border:1px solid #DDD;border-radius:3px;padding:4px;margin-top:6px;background:#fff}
+.controls-section{flex-shrink:0;margin-bottom:8px}
+.command-history{flex:1;display:flex;flex-direction:column;min-height:0}
+.history-header{font-size:12px;font-weight:600;color:#6b7280;margin-bottom:6px;flex-shrink:0}
+#command ul{flex:1;height:50px;overflow:auto;font-size:9px;border:1px solid rgba(203,213,225,0.5);border-radius:4px;padding:3px;background:linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);margin:0;min-height:50px;max-height:50px;box-shadow:inset 0 1px 2px rgba(0,0,0,0.05)}
 #logArea::-webkit-scrollbar,#command ul::-webkit-scrollbar{width:6px}
 #logArea::-webkit-scrollbar-thumb,#command ul::-webkit-scrollbar-thumb{background:#bbb;border-radius:6px}
+.device-control{
+  display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;
+  padding:6px 10px;background:linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);border-radius:6px;border:1px solid rgba(226,232,240,0.6);
+  transition:all 0.2s ease;box-shadow:0 1px 2px rgba(0,0,0,0.04);
+}
+.device-control:hover{
+  border-color:#d1d5db;box-shadow:0 1px 3px rgba(0,0,0,0.1);
+}
+.device-info{display:flex;align-items:center;gap:12px}
+.device-control > .device-info > label{
+  font-size:14px;font-weight:600;color:#374151;margin:0;
+  display:flex;align-items:center;gap:6px;
+}
+.device-status{
+  font-size:11px;font-weight:500;padding:2px 6px;border-radius:4px;
+  transition:all 0.2s ease;
+}
+.device-status.off{background:#fef2f2;color:#dc2626;}
+.device-status.on{background:#f0fdf4;color:#16a34a;}
+.toggle-switch{position:relative;display:inline-block}
+.toggle-switch input[type="checkbox"]{display:none}
+.slider{
+  position:relative;display:block;width:44px;height:24px;
+  background:#e5e7eb;border-radius:12px;cursor:pointer;
+  transition:background-color 0.2s ease;
+}
+.slider:before{
+  content:'';position:absolute;top:2px;left:2px;width:20px;height:20px;
+  background:#fff;border-radius:50%;transition:transform 0.2s ease;
+  box-shadow:0 1px 3px rgba(0,0,0,0.1);
+}
+.toggle-switch input:checked + .slider{
+  background:#10b981;
+}
+.toggle-switch input:checked + .slider:before{
+  transform:translateX(20px);
+}
+.slider:hover{
+  box-shadow:0 0 0 3px rgba(16,185,129,0.1);
+}
+.slider-text{display:none}
+.fish-comfort-container{display:flex;flex-direction:column;gap:6px;margin-top:4px;flex:1}
+.fish-selector-modern{position:relative}
+.fish-selector-modern select{
+  width:100%;padding:6px 10px;border:1px solid rgba(148,163,184,0.3);
+  border-radius:6px;background:linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  font-size:10px;color:#374151;cursor:pointer;transition:all 0.2s ease;
+  box-shadow:0 1px 2px rgba(0,0,0,0.05);
+}
+.fish-selector-modern select:hover{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,0.1)}
+.fish-selector-modern select:focus{outline:none;border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,0.1)}
+.fish-status-card{
+  background:linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  border-radius:6px;padding:6px;border:1px solid rgba(148,163,184,0.2);
+  box-shadow:inset 0 1px 2px rgba(0,0,0,0.05);flex:1;display:flex;flex-direction:column;
+}
+.temp-display{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.temp-label{font-size:9px;color:#64748b;font-weight:500;text-transform:uppercase;letter-spacing:0.5px}
+.temp-value{font-size:12px;color:#1e293b;font-weight:700}
+.status-display{display:flex;align-items:center;gap:6px}
+.status-icon{font-size:14px}
+.status-text{font-size:11px;font-weight:600}
+.status-text.excellent{color:#16a34a}.status-icon.excellent::before{content:'✅'}
+.status-text.good{color:#65a30d}.status-icon.good::before{content:'✅'}
+.status-text.fair{color:#ca8a04}.status-icon.fair::before{content:'⚠️'}
+.status-text.poor{color:#ea580c}.status-icon.poor::before{content:'⚠️'}
+.status-text.critical{color:#dc2626}.status-icon.critical::before{content:'❌'}
 </style>
 </head>
 <body>
@@ -101,24 +172,69 @@ main{height:100%;display:flex;flex-direction:column;gap:10px;padding:10px;min-he
               <div class="rec-item">• Sistem normal çalışıyor</div>
             </div>
           </div>
-          <div class="panel" id="command" style="flex:1.2">
+          <div class="panel" id="command" style="flex:1.2;display:flex;flex-direction:column;">
             <h2>🎮 KOMUT MERKEZİ</h2><div class="sep"></div>
-            <div class="cmd-row"><label>SU POMPASI&nbsp;</label>
-              <select id="paraSel"><option>KAPALI</option><option>AYIR</option><option>BAĞLA</option></select>
+            <div class="controls-section">
+              <div class="device-control">
+                <div class="device-info">
+                  <label>💧 SU POMPASI</label>
+                  <span class="device-status off" id="pumpStatus">Kapalı</span>
+                </div>
+                <div class="toggle-switch">
+                  <input type="checkbox" id="pumpSwitch" onchange="togglePump(this)">
+                  <label for="pumpSwitch" class="slider">
+                    <span class="slider-text off">KAPAT</span>
+                    <span class="slider-text on">AÇ</span>
+                  </label>
+                </div>
+              </div>
+              <div class="device-control">
+                <div class="device-info">
+                  <label>🌀 FAN</label>
+                  <span class="device-status off" id="fanStatus">Kapalı</span>
+                </div>
+                <div class="toggle-switch">
+                  <input type="checkbox" id="fanSwitch" onchange="toggleFan(this)">
+                  <label for="fanSwitch" class="slider">
+                    <span class="slider-text off">KAPAT</span>
+                    <span class="slider-text on">AÇ</span>
+                  </label>
+                </div>
+              </div>
             </div>
-            <div class="cmd-row"><label>FAN&nbsp;</label>
-              <select id="buzSel"><option>KAPALI</option><option>KISA</option><option>UZUN</option><option>SOS</option></select>
+            <div class="command-history">
+              <div class="history-header">Son Komutlar</div>
+              <ul id="cmdHist"></ul>
             </div>
-            <button id="abort" onclick="sendCmd()">KOMUT GÖNDER</button>
-            <ul id="cmdHist"></ul>
           </div>
         </div>
         <div class="mid-panels">
-          <div class="sub" id="conn">
-            <h3>BAĞLANTI DURUMU</h3>
-            <div style="margin:4px 0">LoRa Sinyali:</div>
-            <div class="progress"><span id="sigBar" style="width:80%">80%</span></div>
-            <div style="margin-top:6px">Paketler: <span id="pktCount">0</span>  Kayıp: <span id="lostCount">0</span></div>
+          <div class="sub" id="fishComfort">
+            <h3>🐟 BALIK KONFOR ENDEKSİ</h3>
+            <div class="fish-comfort-container">
+              <div class="fish-selector-modern">
+                <select id="fishSpecies" onchange="changeFishSpecies()">
+                  <option value="tilapia">🐟 Tilapia (22-30°C)</option>
+                  <option value="catfish">🐱 Catfish (22-28°C)</option>
+                  <option value="carp">🐟 Carp (20-28°C)</option>
+                  <option value="tench">🐟 Tench (18-25°C)</option>
+                  <option value="trout">🐟 Rainbow Trout (12-20°C)</option>
+                  <option value="bluegill">🐟 Bluegill (20-28°C)</option>
+                  <option value="perch">🐟 Perch (15-25°C)</option>
+                  <option value="bream">🐟 Bream (18-25°C)</option>
+                </select>
+              </div>
+              <div class="fish-status-card">
+                <div class="temp-display">
+                  <span class="temp-label">Su Sıcaklığı</span>
+                  <span class="temp-value"><span id="fishWaterTemp">--</span>°C</span>
+                </div>
+                <div class="status-display">
+                  <span class="status-icon" id="fishStatusIcon">🔄</span>
+                  <span class="status-text" id="fishStatus">--</span>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="sub">
             <h3>VERİ KAYDI</h3>
@@ -171,13 +287,15 @@ function updateIMU(accX,accY,accZ, gyrX,gyrY,gyrZ) {
 
 let file_text = ''
 
-// Static data object - no WebSocket needed
+// Real-time data object - will be updated via WebSocket
 let data = {
   "weatherTemp": 25.3,
   "waterTemp": 18.7,
   "weatherHum": 62.1,
   "soilMoist": 45.8,
   "waterLevel": 1,
+  "fanState": 0,
+  "pumpState": 0,
   "strength": 85,
   "total": 150,
   "lost": 3,
@@ -185,78 +303,196 @@ let data = {
   "gyro": [0.01, -0.02, 0.005]
 }
 
-// Update data with logical formulas
+// WebSocket connection
+let socket = null;
+let isConnected = false;
+
+// WebSocket connection functions
+function connectWebSocket() {
+  if (socket && socket.readyState === WebSocket.OPEN) {
+    return; // Already connected
+  }
+  
+  socket = new WebSocket('ws://127.0.0.1:8001/');
+  
+  socket.onopen = function(event) {
+    isConnected = true;
+    console.log('WebSocket connected');
+    log('WebSocket bağlantısı kuruldu', 'SUCCESS');
+  };
+  
+  socket.onmessage = function(event) {
+    try {
+      const receivedData = JSON.parse(event.data);
+      console.log('Received data:', receivedData);
+      
+      // Update data object with received sensor data
+      if (receivedData.weatherTemp !== undefined) data.weatherTemp = receivedData.weatherTemp;
+      if (receivedData.waterTemp !== undefined) data.waterTemp = receivedData.waterTemp;
+      if (receivedData.weatherHum !== undefined) data.weatherHum = receivedData.weatherHum;
+      if (receivedData.soilMoist !== undefined) data.soilMoist = receivedData.soilMoist;
+      if (receivedData.water_level !== undefined) data.waterLevel = receivedData.water_level;
+      if (receivedData.fanState !== undefined) data.fanState = receivedData.fanState;
+      if (receivedData.pumpState !== undefined) data.pumpState = receivedData.pumpState;
+      if (receivedData.strength !== undefined) data.strength = receivedData.strength;
+      if (receivedData.total !== undefined) data.total = receivedData.total;
+      if (receivedData.lost !== undefined) data.lost = receivedData.lost;
+      
+      // Update derived values
+      data.temperature = data.weatherTemp;
+      data.humidity = data.weatherHum;
+      
+      console.log('Updated data:', data);
+    } catch (e) {
+      console.error('Error parsing WebSocket data:', e);
+    }
+  };
+  
+  socket.onclose = function(event) {
+    isConnected = false;
+    console.log('WebSocket disconnected');
+    log('WebSocket bağlantısı kesildi', 'WARNING');
+    
+    // Try to reconnect after 3 seconds
+    setTimeout(connectWebSocket, 3000);
+  };
+  
+  socket.onerror = function(error) {
+    console.error('WebSocket error:', error);
+    log('WebSocket hatası', 'ERROR');
+  };
+}
+
+// Update data with logical formulas (fallback when no real data)
 function updateData() {
-  const time = Date.now() / 1000; // seconds since epoch
-  
-  // Temperature variations (day/night cycle simulation)
-  data.weatherTemp = 25 + 10 * Math.sin(time * 0.01) + Math.random() * 2 - 1;
-  data.waterTemp = 18 + 6 * Math.sin(time * 0.008) + Math.random() * 1.5 - 0.75;
-  data.temperature = data.weatherTemp; // Same as weather temp
-  
-  // Humidity (inverse relationship with temperature)
-  data.weatherHum = 70 - (data.weatherTemp - 25) * 1.5 + Math.random() * 5 - 2.5;
-  data.soilMoist = 45 + 15 * Math.sin(time * 0.005) + Math.random() * 3 - 1.5;
-  data.humidity = data.weatherHum; // Same as weather humidity
-  
-  // Altitude and velocity (simulate flight)
-  data.altitude = 200 + 150 * Math.sin(time * 0.02) + Math.random() * 10 - 5;
-  data.velocity = Math.cos(time * 0.02) * 5 + Math.random() * 1 - 0.5;
-  
-  // Battery drain over time
-  data.battery_voltage = Math.max(3.3, 4.2 - (time * 0.0001));
-  
-  // Environmental
-  data.pressure = 1015 + 5 * Math.sin(time * 0.003) + Math.random() * 2 - 1;
-  data.light = 400 + 300 * Math.sin(time * 0.015) + Math.random() * 50 - 25;
-  
-  // Communication
-  data.strength = 80 + 15 * Math.sin(time * 0.007) + Math.random() * 5 - 2.5;
-  data.total += 1;
-  if (Math.random() < 0.02) data.lost += 1;
-  
-  // Water level (occasionally low)
-  data.waterLevel = Math.random() > 0.95 ? 0 : 1;
-  
-  // IMU data
-  data.acc = [
-    Math.random() * 2 - 1,
-    Math.random() * 2 - 1,
-    9.8 + Math.random() * 0.5 - 0.25
-  ];
-  data.gyro = [
-    Math.random() * 0.2 - 0.1,
-    Math.random() * 0.2 - 0.1,
-    Math.random() * 0.1 - 0.05
-  ];
-  
-  // Keep values in realistic ranges
-  data.weatherTemp = Math.max(10, Math.min(45, data.weatherTemp));
-  data.waterTemp = Math.max(5, Math.min(35, data.waterTemp));
-  data.weatherHum = Math.max(20, Math.min(95, data.weatherHum));
-  data.soilMoist = Math.max(15, Math.min(85, data.soilMoist));
-  data.strength = Math.max(0, Math.min(100, data.strength));
+  // Only use dummy data if not connected to WebSocket
+  if (!isConnected) {
+    const time = Date.now() / 1000; // seconds since epoch
+    
+    // Temperature variations (day/night cycle simulation)
+    data.weatherTemp = 25 + 10 * Math.sin(time * 0.01) + Math.random() * 2 - 1;
+    data.waterTemp = 18 + 6 * Math.sin(time * 0.008) + Math.random() * 1.5 - 0.75;
+    data.temperature = data.weatherTemp; // Same as weather temp
+    
+    // Humidity (inverse relationship with temperature)
+    data.weatherHum = 70 - (data.weatherTemp - 25) * 1.5 + Math.random() * 5 - 2.5;
+    data.soilMoist = 45 + 15 * Math.sin(time * 0.005) + Math.random() * 3 - 1.5;
+    data.humidity = data.weatherHum; // Same as weather humidity
+    
+    // Altitude and velocity (simulate flight)
+    data.altitude = 200 + 150 * Math.sin(time * 0.02) + Math.random() * 10 - 5;
+    data.velocity = Math.cos(time * 0.02) * 5 + Math.random() * 1 - 0.5;
+    
+    // Battery drain over time
+    data.battery_voltage = Math.max(3.3, 4.2 - (time * 0.0001));
+    
+    // Environmental
+    data.pressure = 1015 + 5 * Math.sin(time * 0.003) + Math.random() * 2 - 1;
+    data.light = 400 + 300 * Math.sin(time * 0.015) + Math.random() * 50 - 25;
+    
+    // Communication
+    data.strength = 80 + 15 * Math.sin(time * 0.007) + Math.random() * 5 - 2.5;
+    data.total += 1;
+    if (Math.random() < 0.02) data.lost += 1;
+    
+    // Water level (occasionally low)
+    data.waterLevel = Math.random() > 0.95 ? 0 : 1;
+    
+    // IMU data
+    data.acc = [
+      Math.random() * 2 - 1,
+      Math.random() * 2 - 1,
+      9.8 + Math.random() * 0.5 - 0.25
+    ];
+    data.gyro = [
+      Math.random() * 0.2 - 0.1,
+      Math.random() * 0.2 - 0.1,
+      Math.random() * 0.1 - 0.05
+    ];
+    
+    // Keep values in realistic ranges
+    data.weatherTemp = Math.max(10, Math.min(45, data.weatherTemp));
+    data.waterTemp = Math.max(5, Math.min(35, data.waterTemp));
+    data.weatherHum = Math.max(20, Math.min(95, data.weatherHum));
+    data.soilMoist = Math.max(15, Math.min(85, data.soilMoist));
+    data.strength = Math.max(0, Math.min(100, data.strength));
+  }
 }
 
 
 (function init () {
   const $ = id => document.getElementById(id);
   // Only define elements that actually exist in the HTML
-  const sigBar = $('sigBar'), pktCount = $('pktCount'), lostCount = $('lostCount');
-  const paraSel = $('paraSel'), buzSel = $('buzSel'), recBtn = $('recBtn');
+  const recBtn = $('recBtn');
   const logArea = $('logArea'), autosc = $('autosc'), clock = $('clock');
   const cmdHist = $('cmdHist');
   const recommendations = $('recommendations');
   
+  // Fish comfort elements
+  const fishWaterTemp = $('fishWaterTemp'), fishStatus = $('fishStatus');
+  const fishStatusIcon = $('fishStatusIcon'), fishSpecies = $('fishSpecies');
+  
   // Add the missing oriCanvas element - it doesn't exist in HTML, so create a placeholder
   const oriCanvas = document.createElement('div');
   
+  // Fish species data with optimal temperature ranges
+  const fishData = {
+    tilapia: { min: 22, max: 30, name: 'Tilapia' },
+    catfish: { min: 22, max: 28, name: 'Catfish' },
+    carp: { min: 20, max: 28, name: 'Carp' },
+    tench: { min: 18, max: 25, name: 'Tench' },
+    trout: { min: 12, max: 20, name: 'Rainbow Trout' },
+    bluegill: { min: 20, max: 28, name: 'Bluegill' },
+    perch: { min: 15, max: 25, name: 'Perch' },
+    bream: { min: 18, max: 25, name: 'Bream' }
+  };
+  
+  function getFishStatus(waterTemp, selectedSpecies) {
+    const fish = fishData[selectedSpecies];
+    if (!fish) return { text: '--', class: '' };
+    
+    if (waterTemp >= fish.min && waterTemp <= fish.max) {
+      return { text: 'Mükemmel', class: 'excellent' };
+    } else if (waterTemp >= fish.min - 3 && waterTemp <= fish.max + 3) {
+      return { text: 'İyi', class: 'good' };
+    } else if (waterTemp >= fish.min - 5 && waterTemp <= fish.max + 5) {
+      return { text: 'Orta', class: 'fair' };
+    } else if (waterTemp >= fish.min - 8 && waterTemp <= fish.max + 8) {
+      return { text: 'Zayıf', class: 'poor' };
+    } else {
+      return { text: 'Kritik', class: 'critical' };
+    }
+  }
+  
+  function updateFishComfort(waterTemp) {
+    const selectedSpecies = fishSpecies.value;
+    const status = getFishStatus(waterTemp, selectedSpecies);
+    
+    // Update temperature display
+    fishWaterTemp.textContent = waterTemp.toFixed(1);
+    
+    // Update status text and icon
+    fishStatus.textContent = status.text;
+    fishStatus.className = 'status-text ' + status.class;
+    fishStatusIcon.className = 'status-icon ' + status.class;
+  }
+  
+  function changeFishSpecies() {
+    // Re-evaluate comfort when species changes
+    const currentWaterTemp = parseFloat(fishWaterTemp.textContent) || 18;
+    updateFishComfort(currentWaterTemp);
+  }
+  
   // Smart recommendations system
-  function updateRecommendations(weatherTemp, waterTemp, weatherHum, soilMoist, waterLevel) {
+  function updateRecommendations(weatherTemp, waterTemp, weatherHum, soilMoist, waterLevel, fanState, pumpState) {
     let recs = [];
     
     // System status first
     recs.push("🟢 Sistem çalışıyor");
+    
+    // Current relay states
+    recs.push("🌀 Fan: " + (fanState ? "AÇIK" : "KAPALI"));
+    recs.push("💧 Pompa: " + (pumpState ? "AÇIK" : "KAPALI"));
     
     // Temperature analysis
     if (weatherTemp >= 20 && weatherTemp <= 30) {
@@ -319,8 +555,26 @@ function updateData() {
     
     if (needsWater && hotWeather) {
       recs.push("🔥 Sıcak hava + kuru toprak: Acil sulama gerekli!");
+      if (!pumpState) {
+        recs.push("⚠️ Pompa kapalı - sulama başlatılmalı!");
+      }
     } else if (needsWater && lowHumidity) {
       recs.push("🌵 Kuru hava + kuru toprak: Sulama öncelikli");
+      if (!pumpState) {
+        recs.push("💡 Pompayı çalıştırmayı düşünün");
+      }
+    }
+    
+    // Fan recommendations
+    if (hotWeather && !fanState) {
+      recs.push("🌡️ Sıcak hava: Fan çalıştırılmalı");
+    } else if (weatherHum > 85 && !fanState) {
+      recs.push("💨 Yüksek nem: Havalandırma gerekli");
+    }
+    
+    // Water level vs pump state check
+    if (waterLevel < 1 && pumpState) {
+      recs.push("⚠️ DİKKAT: Su seviyesi düşük ama pompa çalışıyor!");
     }
     
     // Time-based recommendations
@@ -424,17 +678,74 @@ function updateData() {
   };
   window.clearLogs = () => { logArea.innerHTML=''; };
   let pktid = 0
-  function sendCmd(type){
+  function togglePump(switchElement){
     pktid++
-    cmd = `${pktid},1,${buzSel.selectedIndex},${paraSel.selectedIndex}`
-    buzSel.value = paraSel.value = 'OFF'
-    console.log(cmd)
-      socket.send(cmd)
-    const li=document.createElement('li');
-    li.textContent=`⏳ ${new Date().toLocaleTimeString()} - ${type}: ${val}`;
-    cmdHist.prepend(li); if(cmdHist.children.length>50)cmdHist.lastChild.remove();
-    log(`Command sent: ${type}:${val}`);
-    setTimeout(()=>ack(li),1_000+Math.random()*2_000);      // fake ACK
+    
+    const isOn = switchElement.checked;
+    const command = isOn ? 'pump on' : 'pump off';
+    const displayAction = isOn ? 'AÇ' : 'KAPAT';
+    const statusElement = document.getElementById('pumpStatus');
+    
+    // Update status indicator
+    statusElement.textContent = isOn ? 'Açık' : 'Kapalı';
+    statusElement.className = `device-status ${isOn ? 'on' : 'off'}`;
+    
+    // Send command via WebSocket
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      socket.send(command);
+      console.log('Sent pump command:', command);
+    } else {
+      log('WebSocket not connected. Cannot send pump command.', 'ERROR');
+      // Revert switch position and status if command failed
+      switchElement.checked = !isOn;
+      statusElement.textContent = !isOn ? 'Açık' : 'Kapalı';
+      statusElement.className = `device-status ${!isOn ? 'on' : 'off'}`;
+      return;
+    }
+    
+    // Add to command history
+    const li = document.createElement('li');
+    li.textContent = `⏳ ${new Date().toLocaleTimeString()} - Su Pompası: ${displayAction}`;
+    cmdHist.prepend(li);
+    if (cmdHist.children.length > 50) cmdHist.lastChild.remove();
+    
+    log(`Pump switched: ${displayAction}`);
+    setTimeout(() => ack(li), 1000 + Math.random() * 2000);  // fake ACK
+  }
+
+  function toggleFan(switchElement){
+    pktid++
+    
+    const isOn = switchElement.checked;
+    const command = isOn ? 'fan on' : 'fan off';
+    const displayAction = isOn ? 'AÇ' : 'KAPAT';
+    const statusElement = document.getElementById('fanStatus');
+    
+    // Update status indicator
+    statusElement.textContent = isOn ? 'Açık' : 'Kapalı';
+    statusElement.className = `device-status ${isOn ? 'on' : 'off'}`;
+    
+    // Send command via WebSocket
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      socket.send(command);
+      console.log('Sent fan command:', command);
+    } else {
+      log('WebSocket not connected. Cannot send fan command.', 'ERROR');
+      // Revert switch position and status if command failed
+      switchElement.checked = !isOn;
+      statusElement.textContent = !isOn ? 'Açık' : 'Kapalı';
+      statusElement.className = `device-status ${!isOn ? 'on' : 'off'}`;
+      return;
+    }
+    
+    // Add to command history
+    const li = document.createElement('li');
+    li.textContent = `⏳ ${new Date().toLocaleTimeString()} - Fan: ${displayAction}`;
+    cmdHist.prepend(li);
+    if (cmdHist.children.length > 50) cmdHist.lastChild.remove();
+    
+    log(`Fan switched: ${displayAction}`);
+    setTimeout(() => ack(li), 1000 + Math.random() * 2000);  // fake ACK
   }
   function ack(li){
     const ok=Math.random()>0.1;
@@ -572,11 +883,8 @@ function saveTextFile(filename, text) {
     push(charts[4], soilMoist);
     push(charts[5], humRatio);
     
-    totalPkt++; pktCount.textContent=totalPkt;
-    if(Math.random()<0.02){lostPkt++; lostCount.textContent=lostPkt;}
-    console.log("Updated packets:", totalPkt, "lost:", lostPkt);
-    const sigP = data.strength;
-    sigBar.style.width=sigP.toFixed(0)+'%'; sigBar.textContent=sigP.toFixed(0)+'%';
+    // Update fish comfort index
+    updateFishComfort(waterTemp);
     const rot = updateIMU(
       data.acc[0], data.acc[1], data.acc[2],
       data.gyro[0], data.gyro[1], data.gyro[2]
@@ -603,12 +911,18 @@ function saveTextFile(filename, text) {
     }
     
     // Update smart recommendations
-    updateRecommendations(weatherTemp, waterTemp, weatherHum, soilMoist, waterLevel);
+    updateRecommendations(weatherTemp, waterTemp, weatherHum, soilMoist, waterLevel, data.fanState, data.pumpState);
     
     // Environmental metrics already updated at top of function
   }
-  window.sendCmd = sendCmd;
+  window.togglePump = togglePump;
+  window.toggleFan = toggleFan;
+  window.changeFishSpecies = changeFishSpecies;
   log('AgriTesk Sistemi başlatıldı');
+  
+  // Connect to WebSocket
+  connectWebSocket();
+  
   // Start with static data immediately
   updateData();
   telemetry(); // Run once immediately
