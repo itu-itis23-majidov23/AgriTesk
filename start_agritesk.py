@@ -75,37 +75,7 @@ class AgriTeskLauncher:
     
     def setup_bluetooth_auto_bind(self):
         """Try to automatically bind the HC-05 if not already bound"""
-        self.log("Attempting to setup Bluetooth auto-bind...")
-        try:
-            # Try to find and bind HC-05 automatically
-            result = subprocess.run(["hcitool", "scan"], capture_output=True, text=True, timeout=10)
-            if result.returncode == 0:
-                lines = result.stdout.strip().split('\n')
-                for line in lines:
-                    if 'HC-05' in line or 'HC05' in line:
-                        # Extract MAC address
-                        parts = line.split()
-                        if len(parts) >= 2:
-                            mac_address = parts[1]
-                            self.log(f"Found HC-05 with MAC: {mac_address}")
-                            
-                            # Try to bind it
-                            bind_result = subprocess.run(
-                                ["sudo", "rfcomm", "bind", "0", mac_address],
-                                capture_output=True, text=True
-                            )
-                            if bind_result.returncode == 0:
-                                self.log("Successfully bound HC-05 to rfcomm0")
-                                time.sleep(2)  # Wait for device to be ready
-                                return True
-                            else:
-                                self.log(f"Failed to bind HC-05: {bind_result.stderr}", "WARNING")
-            
-            self.log("Could not automatically bind HC-05", "WARNING")
-            return False
-        except Exception as e:
-            self.log(f"Error in auto-bind setup: {e}", "WARNING")
-            return False
+        return True
     
     def start_websocket_server(self):
         """Start the WebSocket server"""

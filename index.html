@@ -2,6 +2,7 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>AgriTesk Sistemi - Tarım İzleme Platformu</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
@@ -43,11 +44,96 @@ main{height:100%;display:flex;flex-direction:column;gap:10px;padding:10px;min-he
 #graphs{flex:2;display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:1fr;gap:8px;min-height:0;max-height:100%}
 .chart-box{background:linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);border:1px solid rgba(148,163,184,0.3);border-radius:8px;padding:4px;display:flex;flex-direction:column;min-height:0;max-height:100%;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
 .chart-box canvas{flex:1 !important;min-height:0;max-height:100%}
-#logs{flex:1;display:flex;flex-direction:column;background:linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);border:1px solid rgba(148,163,184,0.3);border-radius:8px;min-height:0;max-height:100%;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
-#logs header{font-size:14px;font-weight:700;text-align:center;background:linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);padding:6px;
-             border-top-left-radius:8px;border-top-right-radius:8px;flex-shrink:0;color:#475569}
-#logArea{flex:1;overflow-y:auto;background:#fff;font-family:Courier,monospace;font-size:11px;padding:6px;max-height:calc(100% - 60px)}
-#logs .controls{padding:4px;display:flex;align-items:center;gap:6px;font-size:12px;flex-shrink:0;border-top:1px solid #ddd}
+#chatbot{flex:1;display:flex;flex-direction:column;background:linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);border:1px solid rgba(148,163,184,0.3);border-radius:8px;min-height:0;max-height:100%;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
+#chatbot header{font-size:14px;font-weight:700;text-align:center;background:linear-gradient(135deg, #4A6FFF 0%, #5A7FFF 100%);padding:6px;
+             border-top-left-radius:8px;border-top-right-radius:8px;flex-shrink:0;color:#fff}
+#chatArea{flex:1;overflow-y:auto;background:#fff;font-family:Inter,Arial,sans-serif;font-size:12px;padding:8px;max-height:calc(100% - 80px);display:flex;flex-direction:column;gap:8px}
+.chat-input{padding:8px;display:flex;align-items:center;gap:6px;font-size:12px;flex-shrink:0;border-top:1px solid #ddd;background:#f8fafc}
+.chat-input input{flex:1;padding:6px 10px;border:1px solid #ddd;border-radius:4px;font-size:12px}
+.chat-input button{background:#4A6FFF;color:#fff;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;font-size:12px}
+.chat-input button:hover{background:#5A7FFF}
+.chat-input button:disabled{background:#ccc;cursor:not-allowed}
+.chat-message{display:flex;flex-direction:column;margin-bottom:8px}
+.chat-message.user{align-items:flex-end}
+.chat-message.assistant{align-items:flex-start}
+.message-bubble{max-width:80%;padding:8px 12px;border-radius:12px;font-size:11px;line-height:1.4;word-wrap:break-word}
+.message-bubble.user{background:#4A6FFF;color:#fff;border-bottom-right-radius:4px}
+.message-bubble.assistant{background:#e5e7eb;color:#374151;border-bottom-left-radius:4px}
+.message-bubble.auto-notification{background:linear-gradient(135deg, #10b981 0%, #059669 100%);color:#fff;border-bottom-left-radius:4px;border-left:3px solid #047857;box-shadow:0 2px 4px rgba(16,185,129,0.2)}
+.chat-message.auto-notification .message-time{color:#059669;font-weight:600}
+.message-time{font-size:9px;color:#6b7280;margin-top:2px;padding:0 4px}
+.typing-indicator{display:flex;align-items:center;gap:4px;padding:8px 12px;background:#e5e7eb;border-radius:12px;border-bottom-left-radius:4px;max-width:80px}
+.typing-dot{width:6px;height:6px;background:#6b7280;border-radius:50%;animation:typing 1.4s infinite}
+.typing-dot:nth-child(2){animation-delay:0.2s}
+.typing-dot:nth-child(3){animation-delay:0.4s}
+@keyframes typing{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-10px)}}
+@keyframes slideInLeft{0%{transform:translateX(-100%);opacity:0}100%{transform:translateX(0);opacity:1}}
+@keyframes slideInRight{0%{transform:translateX(100%);opacity:0}100%{transform:translateX(0);opacity:1}}
+
+/* Responsive Design for Different Screen Sizes */
+@media screen and (max-width: 1200px) {
+  .topSplit{flex-direction:column}
+  #leftCol{min-width:auto;max-width:100%}
+  .metric-grid{grid-template-columns:repeat(4,1fr);grid-auto-rows:120px}
+  .metric .val{font-size:28px}
+  .bottom{height:auto;min-height:50vh}
+  #graphs{grid-template-columns:repeat(2,1fr)}
+}
+
+@media screen and (max-width: 768px) {
+  html,body{font-size:12px}
+  header{padding:6px 12px}
+  header h1{font-size:18px}
+  main{padding:8px;gap:8px}
+  .metric-grid{grid-template-columns:repeat(2,1fr);grid-auto-rows:100px;gap:8px}
+  .metric .val{font-size:24px}
+  .metric header{height:28px;font-size:11px}
+  .top-panels{height:auto;flex-direction:column}
+  .panel{padding:8px}
+  .panel h2{font-size:13px}
+  .mid-panels{height:auto;flex-direction:column}
+  .bottom{flex-direction:column;height:auto}
+  #graphs{grid-template-columns:1fr;grid-auto-rows:200px}
+  .chart-box{min-height:180px}
+  #chatbot{min-height:300px}
+  .device-control{padding:4px 8px}
+  .device-info label{font-size:12px}
+  .toggle-switch .slider{width:36px;height:20px}
+  .toggle-switch .slider:before{width:16px;height:16px;top:2px;left:2px}
+  .toggle-switch input:checked + .slider:before{transform:translateX(16px)}
+}
+
+@media screen and (max-width: 480px) {
+  html,body{font-size:11px}
+  header h1{font-size:16px}
+  main{padding:6px;gap:6px}
+  .metric-grid{grid-template-columns:1fr 1fr;grid-auto-rows:80px;gap:6px}
+  .metric .val{font-size:20px}
+  .metric header{height:24px;font-size:10px}
+  .panel{padding:6px}
+  .panel h2{font-size:12px}
+  .top-panels .panel{min-height:120px}
+  .mid-panels .sub{padding:6px}
+  .chart-box{min-height:150px}
+  #chatbot{min-height:250px}
+  .chat-input{padding:6px}
+  .chat-input input{padding:4px 8px;font-size:11px}
+  .chat-input button{padding:4px 8px;font-size:11px}
+  .message-bubble{font-size:10px;padding:6px 10px}
+  .device-control{flex-direction:column;align-items:flex-start;gap:6px}
+  .toggle-switch{align-self:flex-end}
+}
+
+/* Landscape orientation adjustments */
+@media screen and (max-height: 600px) and (orientation: landscape) {
+  .topSplit{flex-direction:row}
+  #leftCol{flex:1;min-width:250px}
+  .metric-grid{grid-template-columns:repeat(2,1fr);grid-auto-rows:80px}
+  .metric .val{font-size:18px}
+  .bottom{height:60vh}
+  #graphs{grid-template-columns:repeat(3,1fr)}
+}
+
 .panel label{font-size:11px;color:var(--muted)}
 .value{font-weight:600}
 #mission .phase{font-weight:700;background:#E8E8E8;padding:6px;border-radius:4px;text-align:center;margin-bottom:6px}
@@ -68,8 +154,8 @@ main{height:100%;display:flex;flex-direction:column;gap:10px;padding:10px;min-he
 .command-history{flex:1;display:flex;flex-direction:column;min-height:0}
 .history-header{font-size:12px;font-weight:600;color:#6b7280;margin-bottom:6px;flex-shrink:0}
 #command ul{flex:1;height:50px;overflow:auto;font-size:9px;border:1px solid rgba(203,213,225,0.5);border-radius:4px;padding:3px;background:linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);margin:0;min-height:50px;max-height:50px;box-shadow:inset 0 1px 2px rgba(0,0,0,0.05)}
-#logArea::-webkit-scrollbar,#command ul::-webkit-scrollbar{width:6px}
-#logArea::-webkit-scrollbar-thumb,#command ul::-webkit-scrollbar-thumb{background:#bbb;border-radius:6px}
+#chatArea::-webkit-scrollbar,#command ul::-webkit-scrollbar{width:6px}
+#chatArea::-webkit-scrollbar-thumb,#command ul::-webkit-scrollbar-thumb{background:#bbb;border-radius:6px}
 .device-control{
   display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;
   padding:6px 10px;background:linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);border-radius:6px;border:1px solid rgba(226,232,240,0.6);
@@ -253,11 +339,13 @@ main{height:100%;display:flex;flex-direction:column;gap:10px;padding:10px;min-he
         <div class="chart-box"><canvas id="soilMoistChart"></canvas></div>
         <div class="chart-box"><canvas id="humRatioChart"></canvas></div>
       </div>
-      <div id="logs">
-        <header>SİSTEM KAYITLARI</header>
-        <div id="logArea"></div>
-        <div class="controls"><label><input type="checkbox" id="autosc" checked>Otomatik kaydır</label>
-          <button onclick="clearLogs()">Temizle</button></div>
+      <div id="chatbot">
+        <header>🤖 TARIM UZMANI ASISTAN</header>
+        <div id="chatArea"></div>
+        <div class="chat-input">
+          <input type="text" id="chatInput" placeholder="Tarımsal sorularınızı sorun..." onkeypress="handleChatKeyPress(event)">
+          <button onclick="sendMessage()" id="sendBtn">Gönder</button>
+        </div>
       </div>
     </div>
   </main>
@@ -313,12 +401,26 @@ function connectWebSocket() {
     return; // Already connected
   }
   
-  socket = new WebSocket('ws://127.0.0.1:8001/');
+  // Use current host for WebSocket connection (works from any device)
+  const wsHost = window.location.hostname;
+  socket = new WebSocket(`ws://${wsHost}:8001/`);
   
   socket.onopen = function(event) {
     isConnected = true;
     console.log('WebSocket connected');
-    log('WebSocket bağlantısı kuruldu', 'SUCCESS');
+    console.log('WebSocket bağlantısı kuruldu');
+    
+    // Add welcome notification
+    setTimeout(() => {
+      console.log('🌱 Adding welcome notification...');
+      addNotification('🌱 AgriTesk sistemi bağlandı - Otomatik kontroller aktif!');
+      
+      // Also add a test notification after 3 seconds
+      setTimeout(() => {
+        console.log('🔬 Adding test notification...');
+        addNotification('🧪 Test: Bildirim sistemi çalışıyor!');
+      }, 3000);
+    }, 1000);
   };
   
   socket.onmessage = function(event) {
@@ -326,14 +428,30 @@ function connectWebSocket() {
       const receivedData = JSON.parse(event.data);
       console.log('Received data:', receivedData);
       
+      // Handle automatic control notifications
+      if (receivedData.type === 'auto_notification') {
+        console.log('🚨 RECEIVED AUTO NOTIFICATION:', receivedData.message);
+        console.log('📦 Full notification data:', receivedData);
+        addNotification(receivedData.message);
+        return;
+      }
+      
       // Update data object with received sensor data
       if (receivedData.weatherTemp !== undefined) data.weatherTemp = receivedData.weatherTemp;
       if (receivedData.waterTemp !== undefined) data.waterTemp = receivedData.waterTemp;
       if (receivedData.weatherHum !== undefined) data.weatherHum = receivedData.weatherHum;
       if (receivedData.soilMoist !== undefined) data.soilMoist = receivedData.soilMoist;
       if (receivedData.water_level !== undefined) data.waterLevel = receivedData.water_level;
-      if (receivedData.fanState !== undefined) data.fanState = receivedData.fanState;
-      if (receivedData.pumpState !== undefined) data.pumpState = receivedData.pumpState;
+      if (receivedData.fanState !== undefined) {
+        data.fanState = receivedData.fanState;
+        // Update fan UI toggle
+        updateDeviceUI('fan', receivedData.fanState);
+      }
+      if (receivedData.pumpState !== undefined) {
+        data.pumpState = receivedData.pumpState;
+        // Update pump UI toggle
+        updateDeviceUI('pump', receivedData.pumpState);
+      }
       if (receivedData.strength !== undefined) data.strength = receivedData.strength;
       if (receivedData.total !== undefined) data.total = receivedData.total;
       if (receivedData.lost !== undefined) data.lost = receivedData.lost;
@@ -351,7 +469,7 @@ function connectWebSocket() {
   socket.onclose = function(event) {
     isConnected = false;
     console.log('WebSocket disconnected');
-    log('WebSocket bağlantısı kesildi', 'WARNING');
+    console.log('WebSocket bağlantısı kesildi');
     
     // Try to reconnect after 3 seconds
     setTimeout(connectWebSocket, 3000);
@@ -359,7 +477,7 @@ function connectWebSocket() {
   
   socket.onerror = function(error) {
     console.error('WebSocket error:', error);
-    log('WebSocket hatası', 'ERROR');
+    console.log('WebSocket hatası');
   };
 }
 
@@ -424,7 +542,8 @@ function updateData() {
   const $ = id => document.getElementById(id);
   // Only define elements that actually exist in the HTML
   const recBtn = $('recBtn');
-  const logArea = $('logArea'), autosc = $('autosc'), clock = $('clock');
+  const chatArea = $('chatArea'), chatInput = $('chatInput'), sendBtn = $('sendBtn');
+  const clock = $('clock');
   const cmdHist = $('cmdHist');
   const recommendations = $('recommendations');
   
@@ -667,16 +786,203 @@ function updateData() {
     mkChart($(CHART_CANVAS[5]).getContext('2d'), CHART_COLORS[5], CHART_TITLES[5], CHART_YRANGE[5], smoothDummyArr(0.7, 1.3, 50, 0.08, 0.07)), // Nem Oranı
   ];
   const push   = (ch,v)=>{const d=ch.data.datasets[0].data;d.push(v);if(d.length>60)d.shift();ch.update('none');};
-  const log = (msg,lvl='INFO')=>{
-    const log_msg = `[${new Date().toLocaleTimeString()}] [${lvl}] ${msg}`
-    if (recording)
-      file_text += log_msg + '\n'
-    const clr={INFO:'#000',WARNING:'#FF6600',ERROR:'#DC3545',SUCCESS:'#28A745'}[lvl]||'#000';
-    logArea.insertAdjacentHTML('beforeend',
-      `<span style="color:${clr}">${log_msg}</span><br>`);
-    if(autosc.checked)logArea.scrollTop=logArea.scrollHeight;
-  };
-  window.clearLogs = () => { logArea.innerHTML=''; };
+  
+  // Notifications functionality
+  function addNotification(message) {
+    console.log('🔔 addNotification called with:', message);
+    
+    const recommendationsDiv = document.getElementById('recommendations');
+    console.log('📋 recommendations div found:', !!recommendationsDiv);
+    
+    if (!recommendationsDiv) {
+      console.error('❌ recommendations div not found!');
+      return;
+    }
+    
+    // Create notification item
+    const notificationItem = document.createElement('div');
+    notificationItem.className = 'rec-item auto-notification';
+    notificationItem.style.cssText = `
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      padding: 8px 10px;
+      border-radius: 6px;
+      margin-bottom: 6px;
+      border-left: 3px solid #047857;
+      box-shadow: 0 2px 4px rgba(16,185,129,0.2);
+      animation: slideInRight 0.5s ease-out;
+      font-weight: 500;
+    `;
+    
+    // Add timestamp
+    const timestamp = new Date().toLocaleTimeString();
+    notificationItem.innerHTML = `
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span>${message}</span>
+        <small style="opacity: 0.8; font-size: 10px;">${timestamp}</small>
+      </div>
+    `;
+    
+    console.log('📝 Created notification element:', notificationItem);
+    
+    // Add to top of recommendations
+    recommendationsDiv.insertBefore(notificationItem, recommendationsDiv.firstChild);
+    console.log('✅ Notification added to DOM');
+    
+    // Remove old notifications to keep only last 5
+    const notifications = recommendationsDiv.querySelectorAll('.auto-notification');
+    if (notifications.length > 5) {
+      for (let i = 5; i < notifications.length; i++) {
+        notifications[i].remove();
+      }
+    }
+    
+    // Scroll to top to show new notification
+    recommendationsDiv.scrollTop = 0;
+    
+    console.log('🎉 Notification successfully added to recommendations panel:', message);
+  }
+
+  // Test function for notifications (can be called from browser console)
+  function testNotification() {
+    const testMessage = '🧪 Test: Bu bir manuel test bildirimidir!';
+    console.log('🔬 Testing notification manually...');
+    addNotification(testMessage);
+  }
+
+  // Make test function available globally
+  window.testNotification = testNotification;
+
+  // Chatbot functionality
+  let isTyping = false;
+  
+  function addMessage(message, isUser = false, isAutoNotification = false) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `chat-message ${isUser ? 'user' : 'assistant'} ${isAutoNotification ? 'auto-notification' : ''}`;
+    
+    const bubble = document.createElement('div');
+    bubble.className = `message-bubble ${isUser ? 'user' : 'assistant'} ${isAutoNotification ? 'auto-notification' : ''}`;
+    bubble.textContent = message;
+    
+    const time = document.createElement('div');
+    time.className = 'message-time';
+    time.textContent = new Date().toLocaleTimeString();
+    
+    messageDiv.appendChild(bubble);
+    messageDiv.appendChild(time);
+    chatArea.appendChild(messageDiv);
+    chatArea.scrollTop = chatArea.scrollHeight;
+    
+    // Add a subtle animation for auto notifications
+    if (isAutoNotification) {
+      messageDiv.style.animation = 'slideInLeft 0.5s ease-out';
+    }
+  }
+  
+  function showTypingIndicator() {
+    if (isTyping) return;
+    isTyping = true;
+    
+    const typingDiv = document.createElement('div');
+    typingDiv.className = 'chat-message assistant';
+    typingDiv.id = 'typing-indicator';
+    
+    const indicator = document.createElement('div');
+    indicator.className = 'typing-indicator';
+    indicator.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+    
+    typingDiv.appendChild(indicator);
+    chatArea.appendChild(typingDiv);
+    chatArea.scrollTop = chatArea.scrollHeight;
+  }
+  
+  function hideTypingIndicator() {
+    isTyping = false;
+    const indicator = document.getElementById('typing-indicator');
+    if (indicator) {
+      indicator.remove();
+    }
+  }
+  
+  async function sendMessage() {
+    const message = chatInput.value.trim();
+    if (!message) return;
+    
+    // Add user message
+    addMessage(message, true);
+    chatInput.value = '';
+    
+    // Disable input and button
+    chatInput.disabled = true;
+    sendBtn.disabled = true;
+    
+    // Show typing indicator
+    showTypingIndicator();
+    
+    try {
+      const response = await fetch('/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message: message })
+      });
+      
+      const data = await response.json();
+      
+      if (data.status === 'success') {
+        addMessage(data.response);
+      } else {
+        addMessage('Üzgünüm, bir hata oluştu. Lütfen tekrar deneyin.');
+      }
+    } catch (error) {
+      console.error('Chat error:', error);
+      addMessage('Bağlantı hatası. Lütfen tekrar deneyin.');
+    } finally {
+      hideTypingIndicator();
+      chatInput.disabled = false;
+      sendBtn.disabled = false;
+      chatInput.focus();
+    }
+  }
+  
+  function handleChatKeyPress(event) {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      sendMessage();
+    }
+  }
+  
+  // Function to update device UI toggles and status
+  function updateDeviceUI(deviceType, state) {
+    let switchElement, statusElement;
+    
+    if (deviceType === 'fan') {
+      switchElement = document.getElementById('fanSwitch');
+      statusElement = document.getElementById('fanStatus');
+    } else if (deviceType === 'pump') {
+      switchElement = document.getElementById('pumpSwitch');
+      statusElement = document.getElementById('pumpStatus');
+    }
+    
+    if (switchElement && statusElement) {
+      const isOn = state === 1;
+      
+      // Update toggle switch position
+      switchElement.checked = isOn;
+      
+      // Update status text and class
+      statusElement.textContent = isOn ? 'Açık' : 'Kapalı';
+      statusElement.className = `device-status ${isOn ? 'on' : 'off'}`;
+      
+      console.log(`Updated ${deviceType} UI: ${isOn ? 'ON' : 'OFF'}`);
+    }
+  }
+  
+  // Make functions globally available
+  window.sendMessage = sendMessage;
+  window.handleChatKeyPress = handleChatKeyPress;
+  window.updateDeviceUI = updateDeviceUI;
   let pktid = 0
   function togglePump(switchElement){
     pktid++
@@ -695,7 +1001,7 @@ function updateData() {
       socket.send(command);
       console.log('Sent pump command:', command);
     } else {
-      log('WebSocket not connected. Cannot send pump command.', 'ERROR');
+      console.log('WebSocket not connected. Cannot send pump command.');
       // Revert switch position and status if command failed
       switchElement.checked = !isOn;
       statusElement.textContent = !isOn ? 'Açık' : 'Kapalı';
@@ -709,7 +1015,7 @@ function updateData() {
     cmdHist.prepend(li);
     if (cmdHist.children.length > 50) cmdHist.lastChild.remove();
     
-    log(`Pump switched: ${displayAction}`);
+    console.log(`Pump switched: ${displayAction}`);
     setTimeout(() => ack(li), 1000 + Math.random() * 2000);  // fake ACK
   }
 
@@ -730,7 +1036,7 @@ function updateData() {
       socket.send(command);
       console.log('Sent fan command:', command);
     } else {
-      log('WebSocket not connected. Cannot send fan command.', 'ERROR');
+      console.log('WebSocket not connected. Cannot send fan command.');
       // Revert switch position and status if command failed
       switchElement.checked = !isOn;
       statusElement.textContent = !isOn ? 'Açık' : 'Kapalı';
@@ -744,21 +1050,21 @@ function updateData() {
     cmdHist.prepend(li);
     if (cmdHist.children.length > 50) cmdHist.lastChild.remove();
     
-    log(`Fan switched: ${displayAction}`);
+    console.log(`Fan switched: ${displayAction}`);
     setTimeout(() => ack(li), 1000 + Math.random() * 2000);  // fake ACK
   }
   function ack(li){
     const ok=Math.random()>0.1;
     li.textContent=li.textContent.replace('⏳',ok?'✅':'❌');
     li.style.color=ok?'var(--green)':'var(--red)';
-    log(ok?'Command acknowledged':'Command failed', ok?'SUCCESS':'ERROR');
+    console.log(ok?'Command acknowledged':'Command failed');
   }
   window.abortAll = () => {
     [...cmdHist.children].forEach(li=>{
       li.textContent='🔄 '+li.textContent.slice(2);
       li.style.color='#0275D8';
     });
-    log('ABORT ALL COMMANDS requested','WARNING');
+    console.log('ABORT ALL COMMANDS requested');
   };
   let recording=false;
 function saveTextFile(filename, text) {
@@ -780,7 +1086,7 @@ function saveTextFile(filename, text) {
     }
     recBtn.textContent=recording?'Stop Recording':'Start Recording';
     recBtn.style.background=recording?'#f44336':'';
-    log(recording?'Recording started':'Recording stopped','INFO');
+    console.log(recording?'Recording started':'Recording stopped');
   };
   const scene   = new THREE.Scene();
   const camera  = new THREE.PerspectiveCamera(45, oriCanvas.clientWidth/oriCanvas.clientHeight, 0.1, 100);
@@ -894,7 +1200,7 @@ function saveTextFile(filename, text) {
       THREE.MathUtils.degToRad(rot.yawDeg),
       THREE.MathUtils.degToRad(rot.rollDeg)
     );
-    if(tick%5===0)log(`TEMP:${weatherTemp.toFixed(1)}°C HUM:${weatherHum.toFixed(1)}% WATER:${waterTemp.toFixed(1)}°C SOIL:${soilMoist.toFixed(1)}%`);
+    if(tick%5===0)console.log(`TEMP:${weatherTemp.toFixed(1)}°C HUM:${weatherHum.toFixed(1)}% WATER:${waterTemp.toFixed(1)}°C SOIL:${soilMoist.toFixed(1)}%`);
     
     // Water level from static data
     const waterLevel = data.waterLevel;
@@ -918,7 +1224,12 @@ function saveTextFile(filename, text) {
   window.togglePump = togglePump;
   window.toggleFan = toggleFan;
   window.changeFishSpecies = changeFishSpecies;
-  log('AgriTesk Sistemi başlatıldı');
+  console.log('AgriTesk Sistemi başlatıldı');
+  
+  // Add welcome message to chatbot
+  setTimeout(() => {
+    addMessage('Merhaba! Ben AgriTesk tarım uzmanı asistanınızım. 🌱 Sensör verilerini analiz ederek size tarımsal öneriler sunuyorum. Sorularınızı bekliyorum!');
+  }, 1000);
   
   // Connect to WebSocket
   connectWebSocket();

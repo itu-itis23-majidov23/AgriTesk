@@ -3,3 +3,4 @@ websockets==11.0.3
 aiohttp==3.9.1
 aiohttp-cors==0.7.0
 requests==2.31.0
+google-generativeai==0.3.2
